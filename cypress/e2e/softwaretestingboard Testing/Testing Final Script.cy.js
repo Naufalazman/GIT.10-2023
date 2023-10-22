@@ -1,3 +1,4 @@
+import LoginPage from "../../support/LoginPage"
 import MainPage from "../../support/MainPage"
 import RegisterPage from "../../support/RegisterPage"
 const userData = require('../../fixtures/User.json')
@@ -61,5 +62,27 @@ describe('Softwaretestingboard.com Testing', () => {
         cy.get(RegisterPage.crtAccBtn).click()
         cy.get(RegisterPage.FirstNameNULL).should('contain.text', RegisterPage.NullError)
         cy.get(RegisterPage.LastNameNULL).should('contain.text', RegisterPage.NullError)
+    })
+    //POSITIF TEST LOGIN
+    it('Login Akun', () => {
+        cy.get(MainPage.BtnLogin).click()
+        cy.get(LoginPage.Email).type(userData.Valid_User)
+        cy.get(LoginPage.Password).type(userData.Valid_Password)
+        cy.get(LoginPage.BtnSignin).click()
+    })
+    //NEGATIF TEST LOGIN
+    it('Login Akun - Invalid Username/Password', () => {
+        cy.get(MainPage.BtnLogin).click()
+        cy.get(LoginPage.Email).type(userData.Invalid_User)
+        cy.get(LoginPage.Password).type(userData.invalid_Password)
+        cy.get(LoginPage.BtnSignin).click()
+        cy.get(LoginPage.ErrorMsg).should('contain.text', LoginPage.ErrorInvalid)
+    })
+    it.only('Login Akun - Null Email/Password', () => {
+        cy.get(MainPage.BtnLogin).click()
+        cy.get(LoginPage.Email).type(userData.Invalid_User)
+        cy.get(LoginPage.BtnSignin).click()
+        cy.wait(5000)
+        cy.get(LoginPage.ErrorMsg).should('contain.text', LoginPage.ErrorNullField)
     })
  })
