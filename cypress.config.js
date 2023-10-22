@@ -7,6 +7,6 @@ module.exports = defineConfig({
     },
     execTimeout: 600000,
     chromeWebSecurity: false,
-    defaultCommandTimeout: 600000
+    defaultCommandTimeout: 10000
   },
 });

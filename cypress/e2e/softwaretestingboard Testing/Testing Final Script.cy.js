@@ -1,5 +1,6 @@
 import MainPage from "../../support/MainPage"
 import RegisterPage from "../../support/RegisterPage"
+const userData = require('../../fixtures/User.json')
 
 function randomFirstName(){
     const randomString = Math.random().toString(10).substring(2, 10)
@@ -12,7 +13,7 @@ function randomLastName(){
     const Lastname = randomString
     return Lastname
 }
-
+    
 function randomEmail(){
     const randomString = Math.random().toString(10).substring(2, 10)
     const email = randomString + "@gmail.com"
@@ -21,17 +22,44 @@ function randomEmail(){
 
 describe('Softwaretestingboard.com Testing', () => {
     beforeEach(() => {
-        cy.visit('https://magento.softwaretestingboard.com')    
+        cy.visit('https://magento.softwaretestingboard.com')
+        cy.wait(2000)
     })
-    //Positif Test
+    //Positif Test Registrasi Akun
     it('Registrasi Akun', () => {
         cy.get(MainPage.BtnRegister).click()
-        cy.url().should('include', 'customer/account/create/')
         cy.get(RegisterPage.FirstName).type(randomFirstName())
         cy.get(RegisterPage.LastName).type(randomLastName())
         cy.get(RegisterPage.Email).type(randomEmail())
-        cy.get(RegisterPage.Pass).type('@wow123QAbootcamp')
-        cy.get(RegisterPage.confirmPass).type('@wow123QAbootcamp')
+        cy.get(RegisterPage.Pass).type(userData.Valid_Password)
+        cy.get(RegisterPage.confirmPass).type(userData.Valid_Password)
         cy.get(RegisterPage.crtAccBtn).click()
+    })
+    //Negatif Test Registrasi Akun
+    it('Registrasi Akun - NULL Password', () => {
+        cy.get(MainPage.BtnRegister).click()
+        cy.get(RegisterPage.FirstName).type(randomFirstName())
+        cy.get(RegisterPage.LastName).type(randomLastName())
+        cy.get(RegisterPage.Email).type(randomEmail())
+        cy.get(RegisterPage.crtAccBtn).click()
+        cy.get(RegisterPage.passNULL).should('contain.text', RegisterPage.NullError)
+    })
+    it('Registrasi Akun - NULL Email', () => {
+        cy.get(MainPage.BtnRegister).click()
+        cy.get(RegisterPage.FirstName).type(randomFirstName())
+        cy.get(RegisterPage.LastName).type(randomLastName())
+        cy.get(RegisterPage.Pass).type(userData.Valid_Password)
+        cy.get(RegisterPage.confirmPass).type(userData.Valid_Password)
+        cy.get(RegisterPage.crtAccBtn).click()
+        cy.get(RegisterPage.emailNULL).should('contain.text', RegisterPage.NullError)
+    })
+    it('Registrasi Akun - NULL Name', () => {
+        cy.get(MainPage.BtnRegister).click()
+        cy.get(RegisterPage.Email).type(randomEmail())
+        cy.get(RegisterPage.Pass).type(userData.Valid_Password)
+        cy.get(RegisterPage.confirmPass).type(userData.Valid_Password)
+        cy.get(RegisterPage.crtAccBtn).click()
+        cy.get(RegisterPage.FirstNameNULL).should('contain.text', RegisterPage.NullError)
+        cy.get(RegisterPage.LastNameNULL).should('contain.text', RegisterPage.NullError)
     })
  })
